@@ -1,0 +1,673 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Rahul Verma — Digital Marketer & Creator</title>
+<meta name="description" content="Portfolio of Rahul Verma, a results-driven digital marketer helping brands grow through data-driven strategy and creative storytelling.">
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+<style>
+/* -------------------------
+   Visual tokens & layout
+   ------------------------- */
+:root{
+  --bg:#0b0f15;
+  --text:#e6eef8;
+  --accent1:#4ea1ff;
+  --accent2:#b78cff;
+  --card:#14161a;
+  --glass: rgba(255,255,255,0.03);
+  --maxw:1200px;
+  --fast:0.28s;
+  --font-head:'Poppins',sans-serif;
+  --font-body:'Open Sans',sans-serif;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family:var(--font-body);
+  background:var(--bg);
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  overflow-x:hidden;
+}
+
+/* Canvas backdrop */
+#bgCanvas{
+  position:fixed;
+  inset:0;
+  z-index:-2;
+  background: linear-gradient(180deg, rgba(8,10,14,1) 0%, rgba(7,9,12,1) 100%);
+}
+
+/* Header */
+header{
+  position:sticky;
+  top:0;
+  z-index:30;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:1rem;
+  padding:1rem 1.25rem;
+  background: linear-gradient(180deg, rgba(8,10,14,0.6), rgba(8,10,14,0.4));
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid rgba(255,255,255,0.02);
+}
+.brand{
+  display:flex; align-items:center; gap:.6rem; text-decoration:none; color:var(--text);
+}
+.brand-mark{
+  width:44px;height:44px;border-radius:10px;
+  background:linear-gradient(135deg,var(--accent1),var(--accent2));
+  display:flex;align-items:center;justify-content:center;font-weight:700;color:white;
+  font-family:var(--font-head);
+}
+nav{display:flex;gap:.6rem;align-items:center}
+nav a{color:rgba(230,238,248,0.85);text-decoration:none;font-weight:600;padding:.5rem .6rem;border-radius:8px}
+nav a:hover, nav a:focus{background:rgba(255,255,255,0.02);transform:translateY(-2px)}
+
+/* Cursor */
+#cursor, #cursor-follower{
+  position:fixed; left:0; top:0; pointer-events:none; z-index:9999; mix-blend-mode:screen;
+  transition:opacity .18s ease, transform .12s ease;
+}
+#cursor{ width:10px;height:10px;border-radius:50%; background:rgba(255,255,255,0.95); transform:translate(-50%,-50%); }
+#cursor-follower{ width:48px;height:48px;border-radius:10px; background: linear-gradient(135deg,var(--accent1),var(--accent2)); opacity:.6; transform:translate(-50%,-50%); filter: blur(0px); }
+
+/* Page sections */
+.container{ max-width:var(--maxw); margin:0 auto; padding:3rem 1.25rem; }
+.hero{ display:flex; flex-direction:column; align-items:center; text-align:center; gap:1rem; padding-top:2.5rem; padding-bottom:2.5rem; }
+.hero h1{ font-family:var(--font-head); font-size:clamp(2rem,5vw,3.2rem); line-height:1; margin:0;
+  background:linear-gradient(90deg,var(--accent1),var(--accent2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  animation: glow 3.2s ease-in-out infinite alternate;
+}
+@keyframes glow{ from { text-shadow:0 6px 20px rgba(78,161,255,0.12) } to { text-shadow:0 18px 40px rgba(183,140,255,0.16) } }
+.lead{ color:rgba(230,238,248,0.9); max-width:720px; font-size:1.05rem; margin:0; }
+
+/* Buttons */
+.btn{
+  display:inline-flex;align-items:center;gap:.6rem;padding:.7rem 1.1rem;border-radius:10px;
+  border:0;font-weight:700;cursor:pointer;color:white;background:linear-gradient(90deg,var(--accent1),var(--accent2));
+  transition: transform var(--fast), box-shadow var(--fast);
+}
+.btn:hover{ transform:translateY(-4px) scale(1.02); box-shadow: 0 14px 40px rgba(78,161,255,0.12); }
+
+/* Cards and grids */
+.cards{ display:grid; gap:1rem; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); }
+.card{ background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border-radius:12px; padding:1.25rem; box-shadow: 0 8px 30px rgba(3,6,12,0.6); transition: transform var(--fast), box-shadow var(--fast); }
+.card:hover{ transform:translateY(-6px) scale(1.01); box-shadow: 0 24px 50px rgba(3,6,12,0.7); }
+
+/* Typography helpers */
+.section-title{ font-family:var(--font-head); font-size:1.25rem; margin-bottom:.6rem; }
+.muted{ color:rgba(230,238,248,0.72); font-size:.98rem; }
+
+/* Testimonials */
+.testimonial{ font-style:italic; color:rgba(230,238,248,0.92); }
+
+/* Contact */
+.contact-form input, .contact-form textarea{
+  width:100%; padding:.85rem; border-radius:8px; border:1px solid rgba(255,255,255,0.04); background:transparent; color:var(--text);
+  font-family:var(--font-body); margin-bottom:.8rem;
+}
+
+/* Footer */
+footer{ text-align:center; padding:2rem; color:rgba(230,238,248,0.7); background:transparent; border-top:1px solid rgba(255,255,255,0.02); }
+
+/* Fade-in classes (IntersectionObserver) */
+.fade-in{ opacity:0; transform: translateY(14px); transition: opacity .72s ease, transform .72s ease; }
+.fade-in.visible{ opacity:1; transform:none; }
+
+/* Responsive tweaks */
+@media (max-width:820px){
+  nav{display:none}
+  header{padding:1rem}
+  .container{padding:2rem 1rem}
+}
+@media (max-width:480px){
+  .lead{ font-size:1rem }
+  .hero h1{ font-size:1.8rem }
+}
+
+/* Respect prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce){
+  * { transition:none !important; animation:none !important; }
+}
+</style>
+</head>
+<body>
+<canvas id="bgCanvas" aria-hidden="true"></canvas>
+
+<!-- Custom cursor elements -->
+<div id="cursor" aria-hidden="true"></div>
+<div id="cursor-follower" aria-hidden="true"></div>
+
+<header>
+  <a class="brand" href="#" aria-label="Home — Rahul Verma">
+    <div class="brand-mark">RV</div>
+    <div style="display:flex;flex-direction:column;line-height:1;">
+      <strong style="font-family:var(--font-head); font-size:0.95rem;">Rahul Verma</strong>
+      <span style="font-size:0.75rem; color:rgba(230,238,248,0.7)">Digital Marketer & Creator</span>
+    </div>
+  </a>
+
+  <nav aria-label="Main navigation">
+    <a href="#about">About</a>
+    <a href="#services">Services</a>
+    <a href="#portfolio">Portfolio</a>
+    <a href="#testimonials">Testimonials</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</header>
+
+<main>
+  <section class="hero container fade-in" id="hero">
+    <h1>Growth-led marketing that moves the needle</h1>
+    <p class="lead">I partner with product teams and founders to design measurable growth systems — from creative content and performance marketing to experimentation and funnel optimization.</p>
+    <div style="margin-top:1rem;">
+      <a class="btn" href="#contact">Work with me</a>
+    </div>
+  </section>
+
+  <section id="about" class="container fade-in">
+    <h2 class="section-title">About</h2>
+    <p class="muted">I’m a strategist and creator with 6+ years building demand for startups and consumer brands. I combine analytics, storytelling and scalable creative processes to turn prospects into loyal customers.</p>
+    <div style="display:grid;grid-template-columns:1fr 320px;gap:1rem;margin-top:1rem;">
+      <div>
+        <p>My work focuses on acquiring high-quality users, increasing retention through content-driven funnels, and optimizing ad spend for predictable ROI. I lead cross-functional campaigns — from brief to creative production, channel activation and experiment analysis.</p>
+        <ul style="color:rgba(230,238,248,0.9);margin-top:.6rem">
+          <li>Growth strategy & experimentation</li>
+          <li>Paid acquisition (social, search, programmatic)</li>
+          <li>Content systems & short-form video</li>
+          <li>Analytics, tracking & CRO</li>
+        </ul>
+      </div>
+      <aside class="card" style="align-self:start;">
+        <strong>Quick details</strong>
+        <p style="margin:.5rem 0 .2rem 0; color:var(--accent1);">Available for freelance & consultancy</p>
+        <p style="margin:0;">Email: <a href="mailto:hello@rahulverma.example">hello@rahulverma.example</a></p>
+      </aside>
+    </div>
+  </section>
+
+  <section id="services" class="container fade-in">
+    <h2 class="section-title">Services</h2>
+    <p class="muted">Strategic offers designed to create sustainable growth.</p>
+    <div class="cards" style="margin-top:1rem;">
+      <div class="card tilt">
+        <h3>Growth Strategy & Roadmaps</h3>
+        <p class="muted">Roadmaps, hypothesis-driven experiments and OKR alignment to prioritize the highest-leverage growth moves.</p>
+      </div>
+      <div class="card tilt">
+        <h3>Performance Marketing</h3>
+        <p class="muted">End-to-end campaigns — creative, targeting, bidding and tracking — focused on efficient CAC and scalable ROAS.</p>
+      </div>
+      <div class="card tilt">
+        <h3>Creative & Content Systems</h3>
+        <p class="muted">Short-form video, social-first creative and reusable content systems that feed both paid and organic funnels.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="portfolio" class="container fade-in">
+    <h2 class="section-title">Portfolio</h2>
+    <p class="muted">Selected case studies — results reflect collaborative, cross-functional work.</p>
+    <div class="cards" style="margin-top:1rem;">
+      <div class="card tilt">
+        <h3>Multi-Channel Launch — SaaS</h3>
+        <p class="muted">Led a launch combining paid search, content seeding and influencer partnerships — 3x signups in 6 weeks and 40% lower CPA vs baseline.</p>
+      </div>
+      <div class="card tilt">
+        <h3>E-commerce Growth Sprint</h3>
+        <p class="muted">Optimized creatives + funnels for a direct-to-consumer brand, improving CVR by 28% and scaling ROAS to 4.2x.</p>
+      </div>
+      <div class="card tilt">
+        <h3>Organic Social Program</h3>
+        <p class="muted">Built a short-form content strategy that increased organic reach by 220% and acquired consistent top-of-funnel traffic.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="testimonials" class="container fade-in">
+    <h2 class="section-title">Testimonials</h2>
+    <div class="cards" style="margin-top:1rem;">
+      <div class="card testimonial">“Rahul helped us rethink performance — the experiments he ran unlocked a reliable acquisition channel.” — <strong>Head of Growth, FinTech</strong></div>
+      <div class="card testimonial">“Fast, thoughtful and creative. He became a true partner on our campaign.” — <strong>Founder, D2C Brand</strong></div>
+    </div>
+  </section>
+
+  <section id="contact" class="container fade-in">
+    <h2 class="section-title">Contact</h2>
+    <p class="muted">I’m available for freelance projects, advisory roles and short-term engagements.</p>
+    <form class="contact-form" style="margin-top:1rem;" onsubmit="handleContact(event)" novalidate>
+      <input id="name" name="name" type="text" placeholder="Your name" required aria-label="Name">
+      <input id="email" name="email" type="email" placeholder="you@company.com" required aria-label="Email">
+      <textarea id="message" name="message" rows="6" placeholder="Tell me about your project..." required aria-label="Message"></textarea>
+      <div style="display:flex;gap:.6rem;align-items:center">
+        <button class="btn" type="submit">Send message</button>
+        <button class="btn" type="button" onclick="openMailto()" style="background:transparent;border:1px solid rgba(255,255,255,0.06);">Open mail client</button>
+      </div>
+      <p class="muted" style="margin-top:.6rem">No backend required — mailto fallback used.</p>
+    </form>
+  </section>
+</main>
+
+<footer>
+  © <time datetime="2025">2025</time> Rahul Verma — Digital Marketer & Creator
+</footer>
+
+<script>
+/* ============================================================
+   Canvas: digital-marketing themed floating icons with repulsion
+   ============================================================ */
+const canvas = document.getElementById('bgCanvas');
+const ctx = canvas.getContext('2d', { alpha: true });
+let DPR = Math.max(1, window.devicePixelRatio || 1);
+
+function resize() {
+  DPR = Math.max(1, window.devicePixelRatio || 1);
+  canvas.width = Math.floor(window.innerWidth * DPR);
+  canvas.height = Math.floor(window.innerHeight * DPR);
+  canvas.style.width = window.innerWidth + 'px';
+  canvas.style.height = window.innerHeight + 'px';
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+}
+window.addEventListener('resize', resize, { passive: true });
+resize();
+
+/* Respect reduced motion */
+const PREFERS_REDUCE = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* Cursor state */
+const cursorEl = document.getElementById('cursor');
+const followerEl = document.getElementById('cursor-follower');
+let mouse = { x: window.innerWidth/2, y: window.innerHeight/2, vx:0, vy:0 };
+let cur = { x: mouse.x, y: mouse.y };
+let fol = { x: mouse.x, y: mouse.y };
+const lerp = (a,b,n) => (1-n)*a + n*b;
+
+if (!PREFERS_REDUCE) {
+  window.addEventListener('mousemove', (e)=> {
+    mouse.x = e.clientX; mouse.y = e.clientY;
+  }, { passive:true });
+} else {
+  cursorEl.style.display = 'none';
+  followerEl.style.display = 'none';
+}
+
+/* Cursor animation (smooth + follower) */
+function animateCursor() {
+  cur.x = lerp(cur.x, mouse.x, 0.55);
+  cur.y = lerp(cur.y, mouse.y, 0.55);
+  fol.x = lerp(fol.x, mouse.x, 0.12);
+  fol.y = lerp(fol.y, mouse.y, 0.12);
+  cursorEl.style.transform = `translate(${cur.x}px, ${cur.y}px) translate(-50%,-50%)`;
+  followerEl.style.transform = `translate(${fol.x}px, ${fol.y}px) translate(-50%,-50%)`;
+  requestAnimationFrame(animateCursor);
+}
+if (!PREFERS_REDUCE) animateCursor();
+
+/* Icon definitions (drawn with canvas paths) */
+function drawBarChart(ctx, x, y, size, color) {
+  const w = size, h = size;
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.beginPath();
+  ctx.fillStyle = color;
+  // 3 bars
+  ctx.fillRect(-w*0.45, h*0.15, w*0.22, -h*0.5);
+  ctx.fillRect(-w*0.05, h*0.15, w*0.22, -h*0.75);
+  ctx.fillRect(w*0.35, h*0.15, w*0.22, -h*0.35);
+  ctx.restore();
+}
+
+function drawMegaphone(ctx, x, y, size, color) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.scale(size/48, size/48);
+  // body
+  ctx.beginPath();
+  ctx.moveTo(-12, -8);
+  ctx.lineTo(8, -14);
+  ctx.lineTo(18, -8);
+  ctx.lineTo(8, 14);
+  ctx.lineTo(-12, 8);
+  ctx.closePath();
+  ctx.fillStyle = color;
+  ctx.fill();
+  // mouth
+  ctx.beginPath();
+  ctx.ellipse(18, 0, 6, 8, 0, 0, Math.PI*2);
+  ctx.fillStyle = color;
+  ctx.fill();
+  ctx.restore();
+}
+
+function drawGlobe(ctx, x, y, size, color) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.beginPath();
+  ctx.arc(0,0,size*0.5,0,Math.PI*2);
+  ctx.fillStyle = color;
+  ctx.fill();
+  // meridians
+  ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+  ctx.lineWidth = Math.max(1, size*0.03);
+  ctx.beginPath();
+  ctx.ellipse(0,0,size*0.45,size*0.25,0,0,Math.PI*2);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(-size*0.28,-size*0.45);
+  ctx.lineTo(size*0.28,size*0.45);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(size*0.28,-size*0.45);
+  ctx.lineTo(-size*0.28,size*0.45);
+  ctx.stroke();
+  ctx.restore();
+}
+
+function drawDollar(ctx, x, y, size, color) {
+  ctx.save();
+  ctx.translate(x,y);
+  ctx.scale(size/48,size/48);
+  ctx.beginPath();
+  ctx.fillStyle = color;
+  // simple $ sign approximation
+  ctx.font = '28px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('$', 0, 0);
+  ctx.restore();
+}
+
+function drawEnvelope(ctx, x, y, size, color) {
+  ctx.save();
+  ctx.translate(x,y);
+  ctx.beginPath();
+  ctx.rect(-size*0.6, -size*0.35, size*1.2, size*0.7);
+  ctx.fillStyle = color;
+  ctx.fill();
+  ctx.beginPath();
+  ctx.moveTo(-size*0.6,-size*0.35);
+  ctx.lineTo(0, size*0.05);
+  ctx.lineTo(size*0.6,-size*0.35);
+  ctx.fillStyle = 'rgba(0,0,0,0.06)';
+  ctx.fill();
+  ctx.restore();
+}
+
+/* Icon types list */
+const ICON_DRAWERS = [
+  drawBarChart,
+  drawMegaphone,
+  drawGlobe,
+  drawDollar,
+  drawEnvelope
+];
+
+/* Icon object */
+class Icon {
+  constructor(width, height){
+    this.w = width;
+    this.h = height;
+    this.reset(true);
+  }
+  reset(initial=false){
+    // spawn randomly across screen (some from edges)
+    this.size = (Math.random()*26 + 18); // px logical
+    this.x = Math.random()*this.w;
+    this.y = Math.random()*this.h;
+    // randomized velocity (slow drift)
+    const speed = Math.random()*0.3 + 0.15;
+    const ang = Math.random()*Math.PI*2;
+    this.vx = Math.cos(ang)*speed;
+    this.vy = Math.sin(ang)*speed;
+    // choose drawer and color gradient
+    this.drawer = ICON_DRAWERS[Math.floor(Math.random()*ICON_DRAWERS.length)];
+    // color base
+    this.colorBase = Math.random()>0.5 ? {r:78,g:161,b:255} : {r:183,g:140,b:255};
+    this.alpha = Math.random()*0.35 + 0.12;
+    this.glow = Math.random()*12 + 6;
+    this.repelling = false;
+    if (initial) {
+      // spread out more on init
+      this.x = Math.random()*this.w;
+      this.y = Math.random()*this.h;
+    } else {
+      // spawn near an edge for continuous flow
+      const edge = Math.floor(Math.random()*4);
+      if (edge===0){ this.x = -this.size; this.y = Math.random()*this.h; }
+      if (edge===1){ this.x = this.w + this.size; this.y = Math.random()*this.h; }
+      if (edge===2){ this.x = Math.random()*this.w; this.y = -this.size; }
+      if (edge===3){ this.x = Math.random()*this.w; this.y = this.h + this.size; }
+    }
+  }
+  draw(ctx){
+    // composite glow
+    const grd = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size + this.glow);
+    grd.addColorStop(0, `rgba(${this.colorBase.r},${this.colorBase.g},${this.colorBase.b},${this.alpha})`);
+    grd.addColorStop(1, `rgba(10,12,16,0)`);
+    ctx.fillStyle = grd;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size + this.glow, 0, Math.PI*2);
+    ctx.fill();
+    // draw icon itself with a slightly brighter color
+    const iconColor = `rgba(${Math.min(255,this.colorBase.r+30)},${Math.min(255,this.colorBase.g+30)},${Math.min(255,this.colorBase.b+30)},0.98)`;
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+    this.drawer(ctx, this.x, this.y, this.size, iconColor);
+    ctx.restore();
+  }
+  step(dt){
+    // simple friction
+    this.x += this.vx * dt;
+    this.y += this.vy * dt;
+  }
+}
+
+/* Create icon set */
+let icons = [];
+const ICON_COUNT = Math.min(28, Math.floor((window.innerWidth * window.innerHeight) / 120000)); // scale count by viewport (max ~28)
+function initIcons(){
+  icons = [];
+  const w = canvas.clientWidth;
+  const h = canvas.clientHeight;
+  for (let i=0;i<ICON_COUNT;i++){
+    icons.push(new Icon(w, h));
+  }
+}
+initIcons();
+window.addEventListener('resize', ()=> {
+  resize();
+  initIcons();
+});
+
+/* Interaction: repel icons when cursor is near */
+function applyRepulsion(){
+  const mx = mouse.x;
+  const my = mouse.y;
+  for (const ic of icons){
+    const dx = ic.x - mx;
+    const dy = ic.y - my;
+    const dist = Math.sqrt(dx*dx + dy*dy);
+    const r = Math.max(1, Math.min(220, 80 + (ic.size)));
+    if (dist < r){
+      // repel stronger when closer
+      const force = (1 - dist / r) * 1.8;
+      // normalized vector
+      const nx = dx / (dist || 1);
+      const ny = dy / (dist || 1);
+      ic.vx += nx * force * 0.15;
+      ic.vy += ny * force * 0.15;
+      // cap velocity
+      const maxV = 2.2;
+      ic.vx = Math.max(-maxV, Math.min(maxV, ic.vx));
+      ic.vy = Math.max(-maxV, Math.min(maxV, ic.vy));
+      ic.repelling = true;
+    } else {
+      // gentle damping back to nominal drift
+      ic.repelling = false;
+      ic.vx *= 0.995;
+      ic.vy *= 0.995;
+    }
+  }
+}
+
+/* Animation loop */
+let last = performance.now();
+function loop(now){
+  const dt = Math.min(48, now - last) / 16; // normalized delta
+  last = now;
+
+  // clear with a subtle vignette fade to keep edges darker
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  // soft background overlay for depth
+  ctx.fillStyle = "rgba(5,6,8,0.24)";
+  ctx.fillRect(0,0,canvas.width/DPR,canvas.height/DPR);
+
+  if (!PREFERS_REDUCE){
+    applyRepulsion();
+    for (const ic of icons){
+      ic.step(dt);
+      // wrap around screen with slight randomization
+      if (ic.x < -ic.size*2) ic.x = canvas.clientWidth + ic.size*2;
+      if (ic.x > canvas.clientWidth + ic.size*2) ic.x = -ic.size*2;
+      if (ic.y < -ic.size*2) ic.y = canvas.clientHeight + ic.size*2;
+      if (ic.y > canvas.clientHeight + ic.size*2) ic.y = -ic.size*2;
+    }
+    // draw icons (lighter blend for glow)
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+    icons.forEach(ic => ic.draw(ctx));
+    ctx.restore();
+  } else {
+    // reduced motion: draw a few static, low-opacity icons
+    ctx.save();
+    ctx.globalAlpha = 0.06;
+    const staticCount = 6;
+    for (let i=0;i<staticCount;i++){
+      const s = Math.min(42, Math.random()*36 + 18);
+      const px = (i+1) * (canvas.clientWidth / (staticCount+1));
+      const py = canvas.clientHeight * (0.12 + (i%2)*0.12);
+      const col = (i%2===0) ? `rgba(78,161,255,0.12)` : `rgba(183,140,255,0.10)`;
+      drawBarChart(ctx, px, py, s, col);
+    }
+    ctx.restore();
+  }
+
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+
+/* -----------------------------------------------------
+   Small UX: hover enlarge follower when over interactives
+   ----------------------------------------------------- */
+const interactiveEls = Array.from(document.querySelectorAll('a, button, .card, .btn'));
+interactiveEls.forEach(el=>{
+  el.addEventListener('mouseenter', ()=> {
+    followerEl.style.transform += ' scale(1.08)';
+    followerEl.style.filter = 'blur(0.2px)';
+  });
+  el.addEventListener('mouseleave', ()=> {
+    // reset transform while keeping position
+    followerEl.style.filter = '';
+    followerEl.style.transform = `translate(${fol.x}px, ${fol.y}px) translate(-50%,-50%)`;
+  });
+});
+
+/* -----------------------------------------------------
+   Contact form handlers (mailto fallback)
+   ----------------------------------------------------- */
+function buildMailto(data){
+  const subject = encodeURIComponent(`Inquiry from ${data.name || 'Website'}`);
+  const body = encodeURIComponent(`Name: ${data.name}\nEmail: ${data.email}\n\n${data.message}`);
+  return `mailto:hello@rahulverma.example?subject=${subject}&body=${body}`;
+}
+function handleContact(e){
+  e.preventDefault();
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const message = document.getElementById('message').value.trim();
+  if (!name || !email || !message){
+    alert('Please complete all fields before sending.');
+    return;
+  }
+  window.location.href = buildMailto({ name, email, message });
+}
+function openMailto(){
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const message = document.getElementById('message').value.trim();
+  window.location.href = buildMailto({ name, email, message });
+}
+
+/* -----------------------------------------------------
+   IntersectionObserver: reveal sections smoothly
+   ----------------------------------------------------- */
+const observer = new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if (entry.isIntersecting){
+      entry.target.classList.add('visible');
+      observer.unobserve(entry.target);
+    }
+  });
+},{ threshold: 0.18 });
+
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+/* -----------------------------------------------------
+   Card tilt (3D) effect - subtle and respects reduced motion
+   ----------------------------------------------------- */
+if (!PREFERS_REDUCE){
+  document.querySelectorAll('.tilt').forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const r = card.getBoundingClientRect();
+      const px = (e.clientX - r.left) / r.width;
+      const py = (e.clientY - r.top) / r.height;
+      const rotY = (px - 0.5) * -8; // degrees
+      const rotX = (py - 0.5) * 8;
+      card.style.transform = `perspective(800px) rotateX(${rotX}deg) rotateY(${rotY}deg) scale(1.02)`;
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = '';
+    });
+  });
+}
+
+/* -----------------------------------------------------
+   Repulsion link: when cursor moves, update force for icons
+   ----------------------------------------------------- */
+let lastRepelCheck = 0;
+window.addEventListener('mousemove', (e) => {
+  // throttle repulsion calculations slightly
+  const now = performance.now();
+  if (now - lastRepelCheck > 16) {
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
+    applyRepulsion();
+    lastRepelCheck = now;
+  } else {
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
+  }
+}, { passive: true });
+
+/* Prevent accidentally selecting canvas elements on touch */
+canvas.addEventListener('touchstart', (e)=> {
+  const t = e.touches[0];
+  mouse.x = t.clientX; mouse.y = t.clientY;
+}, { passive: true });
+
+/* Init icons after layout ready */
+window.addEventListener('load', ()=> {
+  resize();
+  initIcons();
+});
+</script>
+</body>
+</html>
