@@ -42,6 +42,15 @@
         .hero-gradient {
             background: linear-gradient(135deg, rgba(99,102,241,0.9) 0%, rgba(139,92,246,0.9) 100%);
         }
+
+
+	#cursor {
+ 	 pointer-events: none;
+	}
+#cursor {
+  z-index: 0; }
+
+
         
         .nav-link {
             position: relative;
@@ -922,6 +931,18 @@ document.getElementById('contactForm').addEventListener('submit', function(e) {
   } else {
     document.getElementById('cursor').style.display = 'none';
   }
+
+
+const menuBtn = document.querySelector('.menu-btn'); // your hamburger icon
+const navMenu = document.querySelector('.nav-menu'); // your menu list
+
+menuBtn.addEventListener('click', toggleMenu);
+menuBtn.addEventListener('touchstart', toggleMenu); // mobile touch support
+
+function toggleMenu(e) {
+  e.preventDefault(); // stop weird behavior
+  navMenu.classList.toggle('active');
+}
 
 
 
