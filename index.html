@@ -918,6 +918,50 @@ document.getElementById('contactForm').addEventListener('submit', function(e) {
     document.getElementById('cursor').style.display = 'none';
   }
 
+
+
+
+// 1) Disable right-click (context menu) globally
+document.addEventListener('contextmenu', function(e) {
+  e.preventDefault();
+}, { capture: true }); // capture to run before other handlers
+
+// 2) Prevent common save/devtools keyboard shortcuts
+document.addEventListener('keydown', function(e) {
+  // e.key can be 'S','U','I' etc. Check ctrl/meta/shift combos
+  if (
+    (e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S' || e.key === 'u' || e.key === 'U') ||
+    (e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'I' || e.key === 'i') || // Ctrl+Shift+I
+    e.key === 'F12' // F12
+  ) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+}, { capture: true });
+
+// 3) Make all images non-draggable and block dragstart
+function protectImages() {
+  const imgs = document.querySelectorAll('img.protect-img, img[data-protect]');
+  imgs.forEach(img => {
+    img.setAttribute('draggable', 'false');
+    img.addEventListener('dragstart', e => e.preventDefault());
+    // Add overlay to capture pointer events (so right-click doesn't act on image directly)
+    if (!img.parentElement.classList.contains('protect-wrapper')) {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'protect-wrapper';
+      img.parentNode.insertBefore(wrapper, img);
+      wrapper.appendChild(img);
+      const overlay = document.createElement('div');
+      overlay.className = 'protect-overlay';
+      wrapper.appendChild(overlay);
+    }
+  });
+}
+
+// Run on DOM ready and also after dynamic content updates if necessary
+if (document.readyState !== 'loading') protectImages();
+else document.addEventListener('DOMContentLoaded', protectImages);
+
 </script>
 </body>
 </html>
